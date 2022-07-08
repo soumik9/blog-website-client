@@ -4,9 +4,9 @@ import toast from "react-hot-toast";
 
 const useUser = () => {
     let navigate = useNavigate();
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState(null);
+    const [logged, setLogged] = useState(true);
     const [userLoading, setUserLoading] = useState(false);
-    const [logged, setLogged] = useState(false);
     const userId = localStorage.getItem('userId');
 
     useEffect( () => {
@@ -24,7 +24,6 @@ const useUser = () => {
                     localStorage.removeItem('accessToken');
                     localStorage.removeItem('userId');
                     navigate('/login');
-                    setLogged(false);
                     toast.error('Forbidden/Unauthorized access!', { duration: 2000, position: 'top-right', });
                 }
                 return res.json();
@@ -34,10 +33,13 @@ const useUser = () => {
                 setLogged(true);
                 setUserLoading(false);
             })
+        }else{
+            setUser(null)
+            setLogged(false)
         }
-    }, [ user, navigate, userId])
+    }, [ navigate, userId])
 
-    return { user, setUser, userLoading, logged, setLogged };
+    return { user, userLoading, logged };
 }
 
 export default useUser;

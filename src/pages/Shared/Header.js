@@ -1,17 +1,17 @@
 import React from 'react';
-import { Navbar, Container, Nav, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom';
+import { Navbar, Container, Nav } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
 const Header = () => {
 
-    const { user, setUser, logged, setLogged } = useUser();
+    const { user } = useUser();
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        setUser({});
-        setLogged(false);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userId');
+        navigate('/login');
     }
 
     return (
@@ -25,12 +25,15 @@ const Header = () => {
                 <Navbar.Collapse className="justify-content-end">
                     
                     {
-                        logged ? <>
+                        user && <>
                                 <Navbar.Text>
-                                    Signed in as: <a href="#login">{ user?.name }</a>
+                                    Signed in as: <a href="#login">{ user.name }</a>
                                 </Navbar.Text>
                                 <button className='btn btn-info ms-3 text-white' onClick={handleLogout}>Logout</button>
-                        </>  : <Link to='login'>Login</Link>
+                        </>
+                    }
+                    {
+                        !user && <Link to='login'>Login</Link>
                     }
 
                 </Navbar.Collapse>

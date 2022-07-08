@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import useUser from '../hooks/useUser';
+import { useNavigate } from 'react-router-dom';
 import Loading from './Shared/Loading';
 
 const Login = () => {
 
-    // if user
     const navigate = useNavigate();
-    const { logged} = useUser();
-    if(logged){ navigate('/'); }
+
+    const userId = localStorage.getItem('userId');
+    useEffect(() => {
+        if (userId) { navigate('/'); }
+    }, [userId, navigate])
+
 
     const [loginData, setLoginData] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
 
-
-    
     const fetchLoginApi = async () => {
         setLoading(true);
         const requestOptions = {
@@ -30,7 +30,6 @@ const Login = () => {
         fetch('http://localhost:5000/api/login', requestOptions)
         .then(res => res.json())
         .then(data => {
-            console.log(data);
             setLoading(false);
             if (data.message) {
                 toast.success(`${data.message}`, { duration: 2000, position: 'top-right' });
