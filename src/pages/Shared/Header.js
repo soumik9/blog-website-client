@@ -24,17 +24,20 @@ const Header = () => {
                 </Nav>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
-                    
+
                     {
                         user && <>
-                                <Navbar.Text>
-                                    Signed in as: <a href="#login">{ user.name }</a>
-                                </Navbar.Text>
-                                <button className='btn btn-info ms-3 text-white' onClick={handleLogout}>Logout</button>
+                            <Navbar.Text>
+                                Signed in as: <a href="#login">{user.name}</a>
+                            </Navbar.Text>
+                            <button className='btn btn-info ms-3 text-white' onClick={handleLogout}>Logout</button>
                         </>
                     }
                     {
-                        !user && <Link to='login'>Login</Link>
+                        !user && <>
+                            <Link to='login' className='me-3'>Login</Link>
+                            <Link to='register'>Register</Link>
+                        </>
                     }
 
                 </Navbar.Collapse>

@@ -27,7 +27,7 @@ const Login = () => {
             body: JSON.stringify(loginData)
         };
 
-        fetch('http://localhost:5000/api/login', requestOptions)
+        fetch('https://blog-soumik9.herokuapp.com/api/login', requestOptions)
         .then(res => res.json())
         .then(data => {
             setLoading(false);

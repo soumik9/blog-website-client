@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import useUser from '../hooks/useUser';
 import Loading from './Shared/Loading';
 
@@ -14,9 +14,9 @@ const Single = () => {
     const [comment, setComment] = useState({ text: '', userId: '', postId: '' })
     const [loading, setLoading] = useState(false);
 
-    // get all posts
+    // get single post
     const { data: post, isLoading, refetch } = useQuery(['post'], () =>
-        fetch(` http://localhost:5000/api/post/${postId}`, {
+        fetch(`https://blog-soumik9.herokuapp.com/api/post/${postId}`, {
             headers: {
                 'content-type': 'application/json',
                 authorization: `Bearer ${localStorage.getItem('accessToken')}`
@@ -35,19 +35,21 @@ const Single = () => {
                 return res.json();
             }))
 
-
+    // add new comment on specific post
     const handleComment = (e) => {
         e.preventDefault();
-        console.log(comment);
-
         setLoading(true);
+
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                authorization: `Bearer ${localStorage.getItem('accessToken')}`
+             },
             body: JSON.stringify(comment)
         };
 
-        fetch('http://localhost:5000/api/comment/create', requestOptions)
+        fetch('https://blog-soumik9.herokuapp.com/api/comment/create', requestOptions)
             .then(res => res.json())
             .then(data => {
                 refetch();
@@ -56,20 +58,24 @@ const Single = () => {
                     setComment({ text: '', userId: '', postId: '' })
                     toast.success(`${data.message}`, { duration: 2000, position: 'top-right' });
                 }
+                if (data.success === false) {
+                    toast.error(`${data.message}`, { duration: 2000, position: 'top-right' });
+                }
             });
     }
 
+    // loading
     if (isLoading || loading) { return <Loading /> }
 
     return (
-        <Container className='mt-4'>
+        <Container className='my-4'>
             <Row>
                 <Col>
                     <div className='d-flex gap-5 text-decoration-none card p-4'>
                         <div>
                             {
                                 post?.post.img ?
-                                    <img height={200} src={`http://localhost:5000/api/${post?.post.img}`} alt="" />
+                                    <img height={200} src={`https://blog-soumik9.herokuapp.com/api/${post?.post.img}`} alt="" />
                                     : <img height={200} src="http://placekitten.com/150/150" alt='' />
                             }
 
@@ -88,7 +94,6 @@ const Single = () => {
                                 <p className='text-white m-0'>{comment.text}</p>
                             </div>) : <p>No comment on this post</p>
                         }
-
                     </div>
 
                     {

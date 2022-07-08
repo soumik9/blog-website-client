@@ -12,7 +12,7 @@ const useUser = () => {
     useEffect( () => {
         if(userId){
             setUserLoading(true);
-            fetch(`http://localhost:5000/api/user/${userId}`, {
+            fetch(`https://blog-soumik9.herokuapp.com/api/user/${userId}`, {
                 method: 'GET',
                 headers: {
                     'content-type': 'application/json',

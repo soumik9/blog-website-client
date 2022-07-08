@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import useUser from '../hooks/useUser';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Loading from './Shared/Loading';
 
@@ -10,14 +10,8 @@ const AddPost = () => {
     const { logged } = useUser();
     const navigate = useNavigate();
 
-    const [post, setPost] = useState({
-        title: '', author: '', desc: '', img: ''
-    })
-
-    const [error, setError] = useState({
-        title: '', author: '', desc: '', img: ''
-    })
-
+    const [post, setPost] = useState({ title: '', author: '', desc: '', img: '' })
+    const [error, setError] = useState({ title: '', author: '', desc: '', img: '' })
     const [loading, setLoading] = useState(false);
 
     // image
@@ -31,10 +25,10 @@ const AddPost = () => {
         }
     }
 
+    // add new post
     const handleAddPost = async (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(post);
 
         var formData = new FormData();
         formData.append('title', post.title);
@@ -46,7 +40,7 @@ const AddPost = () => {
             authorization: `Bearer ${localStorage.getItem('accessToken')}`
         }};
 
-        axios.post("http://localhost:5000/api/post/create", formData, config)
+        axios.post("https://blog-soumik9.herokuapp.com/api/post/create", formData, config)
         .then(res => {
             console.log(res);
             setLoading(false);
@@ -68,8 +62,10 @@ const AddPost = () => {
         })
     }
 
-    if (!logged) { return <p>Please login to continue</p> }
+    // checking is user logged in
+    if (!logged) { return <p className='text-center text-danger mt-4'>Please login to continue</p> }
 
+    // loading data
     if(loading) {  return <Loading /> }
 
     return (
